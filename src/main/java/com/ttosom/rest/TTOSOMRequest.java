@@ -3,7 +3,6 @@ package com.ttosom.rest;
 import java.io.Serializable;
 import java.util.List;
 
-import com.ttosom.distance.DistanceEnum;
 import com.ttosom.neuron.NodeValue;
 
 public class TTOSOMRequest implements Serializable{
@@ -13,7 +12,7 @@ public class TTOSOMRequest implements Serializable{
 	
 	private String dataSetUrl;
 	
-	private List<NodeValue> treeArray;
+	private List<NodeValue> treeAsArray;
 	
 	private int iterations;
 	
@@ -25,7 +24,7 @@ public class TTOSOMRequest implements Serializable{
 	
 	private int finalLearningRate;
 	
-	private DistanceEnum distance;
+	private String distance;
 
 	public String getDataSetUrl() {
 		return dataSetUrl;
@@ -35,12 +34,12 @@ public class TTOSOMRequest implements Serializable{
 		this.dataSetUrl = dataSetUrl;
 	}
 
-	public List<NodeValue> getTreeArray() {
-		return treeArray;
+	public List<NodeValue> getTreeAsArray() {
+		return treeAsArray;
 	}
 
-	public void setTreeArray(List<NodeValue> treeArray) {
-		this.treeArray = treeArray;
+	public void setTreeAsArray(List<NodeValue> treeAsArray) {
+		this.treeAsArray = treeAsArray;
 	}
 
 	public int getIterations() {
@@ -83,11 +82,11 @@ public class TTOSOMRequest implements Serializable{
 		this.finalLearningRate = finalLearningRate;
 	}
 
-	public DistanceEnum getDistance() {
+	public String getDistance() {
 		return distance;
 	}
 
-	public void setDistance(DistanceEnum distance) {
+	public void setDistance(String distance) {
 		this.distance = distance;
 	}
 

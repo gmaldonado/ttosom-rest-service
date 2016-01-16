@@ -20,33 +20,25 @@ import weka.core.Instances;
  * This class represents the implementation of the TTOSOM following the specification given in:
  * 
  * <p>
- * Changes in version 1.0.1 (17, March 2014)
+ * Changes in version 2.0. (16, January 2016)
  * 
  * <ol>
- * <li>Fixed a bug in the computation of the bubble of activity.</li>
- * <li>Added modules for the pre-computation of the bubble of activity which speed-up the algorithm dramatically.</li>
- * <li>Improved javadoc documentation.</li>
- * <li>Change interface getNeurons() for getWeights() which returns an array of weights.</li>
- * <li>All the files containing topology information where moved to the folder "data".</li>
- * <li>Added a series of modules written in R for the visualization of the TTOSOM.</li>
- * <li>change the internal implementation of FindBMU(...) so as to perform iterative search instead of recursion.</li>
+ * <li>This new version of the software is a REST implementation</li>
+ * <li>Now using Maven and Spring MVC </li>
  * </ol>
  * </p>
  * 
  * @author Cesar Astudillo, Gonzalo Maldonado
- * @version 1.0.1
+ * @version 2.0
  */
  
 public class TTOSOM extends Classifier implements Serializable{
-    private static final long serialVersionUID = -8464084336600641535L;
+    
+	private static final long serialVersionUID = -8464084336600641535L;
     private Neuron root; 
- 
- 
     private Map<Neuron, Map<Integer, ArrayList<Neuron>>> map; 
     private ArrayList<Instance> weights = new ArrayList<Instance>();
     private ArrayList<Neuron> neuronList = new ArrayList<Neuron>();
- 
- 
     private double initialLearning;
     private double initialRadius;
     private double finalLearning;
@@ -113,7 +105,6 @@ public class TTOSOM extends Classifier implements Serializable{
                 node.getWeight().setClassValue(popularClassIndex);
             }
             else{
-                //node.getWeight().setClassMissing();   
                 Random rdm = new Random();
                 node.getWeight().setClassValue(rdm.nextInt(labeledData.numClasses()));
  
@@ -135,8 +126,6 @@ public class TTOSOM extends Classifier implements Serializable{
     public void buildClassifier(Instances data) throws Exception {
         cluster(data);
         computeLabels();
- 
- 
     }
  
  
@@ -166,7 +155,6 @@ public class TTOSOM extends Classifier implements Serializable{
             }
         }
         return;
- 
     }
  
  
@@ -200,22 +188,16 @@ public class TTOSOM extends Classifier implements Serializable{
     @Override
     public double classifyInstance(Instance instance){
         Neuron bmu = findBMU(root,instance, root);
-        Double classValue = bmu.getWeight().classValue();
-        //System.out.println("Instance: "+instance+" predicted class: "+instance.classAttribute().value(classValue.intValue()));
         return bmu.getWeight().classValue();
     }
  
- 
- 
     /**
-     * cluster the data.
+     * Cluster the data.
      * 
      * @param data the data to be clustered.
      */
     private void cluster(Instances data) {
- 
-//        System.out.println("OK1");
- 
+    	
         double radius = initialRadius;
         double learningRate = initialLearning;
  
@@ -227,8 +209,6 @@ public class TTOSOM extends Classifier implements Serializable{
             learningRate = calculateValue(learningRate, initialLearning, finalLearning, iterations);  
  
         }
- 
-//        System.out.println("OK2");
     }
  
     /**
@@ -247,10 +227,7 @@ public class TTOSOM extends Classifier implements Serializable{
      * 
      * @param data The data to be clustered.
      */
- 
- 
     private void computeLabels() {
-        //System.out.println("ok");
         if(!clustering){
             //Let's get the labeled data to generate the classifier 
             Instances labeledData = new Instances(dataSet,0);
@@ -277,14 +254,12 @@ public class TTOSOM extends Classifier implements Serializable{
     public void describeTopology(List<NodeValue> elements){
         root = new Neuron(null,elements,dataSet);
         map= new HashMap<Neuron, Map<Integer, ArrayList<Neuron>>> ();
-         
+        
         //keep a list of references to the neurons.
         //this avoid the full tree traversal using recursion an allow the use of a for loop
         neuronList.clear();
         treeToArray(root);//update the neuron array retrieving all the neurons in pre-order.
-         
         preComputeNeighbors();
- 
     }
  
     /**
@@ -297,33 +272,17 @@ public class TTOSOM extends Classifier implements Serializable{
      * @return best matching unit corresponding to the input sample
      */
     public Neuron findBMU(Neuron currentNode,Instance inputSample, Neuron bestSoFar){
-         
-        /*
-        if(actualNode == null){
-            return bmu;
-        }
-        else{
-            if(distance.calculateDistance(inputSample, bmu.getWeight(), dataSet) >
-            distance.calculateDistance(inputSample, actualNode.getWeight(), dataSet)){
-                bmu = actualNode;
-            }
-            for(Neuron child : actualNode.getChildren()){
-                bmu = findBMU(child, inputSample, bmu);
-            }
-        }
-        return bmu;
-        */
-         
-        double d =distance.calculateDistance(inputSample, bestSoFar.getWeight(), dataSet);
+    	
+        double calculatedDistance =distance.calculateDistance(inputSample, bestSoFar.getWeight(), dataSet);
         double c;
         Neuron candidateNeuron=null;
          
         for (Iterator<Neuron> iterator = neuronList.iterator(); iterator.hasNext();) {
             candidateNeuron = (Neuron) iterator.next();
             c=distance.calculateDistance(inputSample, candidateNeuron.getWeight(), dataSet);
-            if(c < d){ // new BMU
+            if(c < calculatedDistance){ // new BMU
                 bestSoFar = candidateNeuron; //take a note of it
-                d=c; // remember the distance
+                calculatedDistance=c; // remember the distance
             }
         }
         return bestSoFar;
@@ -357,38 +316,14 @@ public class TTOSOM extends Classifier implements Serializable{
     private ArrayList<Neuron> getPrecomputedBubble(long radius, Neuron bmu) {
         ArrayList<Neuron> bubbleOfActivity;
         Map<Integer, ArrayList<Neuron>> list = map.get(bmu);
- 
-        //BUG solved! 
-        //solve bug in pre-computation of the bubble of activity.
-        //System.out.println("list.size():"+list.size()+"  radius:"+radius+"  bmu:"+bmu.getId());
- 
-        //print list (debug)
- 
-        //  Set<Entry<Integer, ArrayList<Neuron>>> e = list.entrySet();
-        //  for (Iterator iterator = e.iterator(); iterator.hasNext();) {
-        //      Entry<Integer, ArrayList<Neuron>> entry = (Entry<Integer, ArrayList<Neuron>>) iterator
-        //              .next();
-        //      System.out.print(entry.getKey()+" -> ");
-        //      ArrayList<Neuron> v = entry.getValue();
-        //          for (Iterator iterator2 = v.iterator(); iterator2.hasNext();) {
-        //              Neuron neuron = (Neuron) iterator2.next();
-        //                  System.out.print(neuron.getId()+" ");
-        //          }
-        //      System.out.println();
-        //  }
-        //  System.out.println(list.get(new Integer((int)radius)));
- 
- 
-        if(radius+1>list.size())
-            bubbleOfActivity=list.get(new Integer((int)list.size()-1));
-        else
-            bubbleOfActivity=list.get(new Integer((int)radius));
- 
-//        if(bubbleOfActivity==null){
-//            System.out.println("bubble situation!");  
-//            System.out.println("bmu:"+bmu.getId());
-//            System.out.println("radius:"+radius);
-//        }
+        
+        if(radius+1>list.size()){
+        	bubbleOfActivity=list.get(new Integer((int)list.size()-1));
+        }
+        else{
+        	bubbleOfActivity=list.get(new Integer((int)radius));
+        }
+
         return bubbleOfActivity;
     }
  
@@ -409,7 +344,7 @@ public class TTOSOM extends Classifier implements Serializable{
     }
  
     /**
-     * pre-compute the neighbors of the bubble of activity.
+     * Pre-compute the neighbors of the bubble of activity.
      */
     private void preComputeNeighbors() {
         map.clear();// reset the pre-computed bubble of activities.
@@ -428,56 +363,9 @@ public class TTOSOM extends Classifier implements Serializable{
             while(bubbleOfActivity.size()<neuronList.size());
             map.put(neuron,radiusToNeurons); //add the mapping for all the bubbles around a particular neuron 
         }
-        //printPrecomputedNeighborhoods();
     }
- 
-    
-     /* Prints the vectors of the tree and adds the weight vectors of the 
-     * neurons to the weights list.
-     * @param node root tree
-     * @param indent indentation level to print every branch in the tree*/
-     
-    public void printWeightVectors(Neuron node, int indent){  
-        if ( node != null )
-        {  if ( indent > 0 )
-            for ( int k = 0; k < indent; k++ )
-                System.out.print (" ");
-        System.out.println(node.getWeightWithoutClass());
-        weights.add(node.getWeight());
- 
-        for(Neuron child : node.getChildren()){
-            printWeightVectors(child, indent+2);
-        }
-        }
-    }
- /**
-    private void printPrecomputedNeighborhoods() {
-        System.out.println("Total of neurons pre-processed: "+map.size());
-        System.out.println();
-        Set<Entry<Neuron, Map<Integer, ArrayList<Neuron>>>> group = map.entrySet();
-        for (Iterator it1 = group.iterator(); it1.hasNext();) {
-            Entry<Neuron, Map<Integer, ArrayList<Neuron>>> groupEntry = (Entry<Neuron, Map<Integer, ArrayList<Neuron>>>) it1
-                    .next();
-            Map<Integer, ArrayList<Neuron>> e = groupEntry.getValue();
-            Set<Entry<Integer, ArrayList<Neuron>>> neuronsEntry = e.entrySet();
-            for (Iterator it2 = neuronsEntry.iterator(); it2.hasNext();) {
-                Entry<Integer, ArrayList<Neuron>> entryRadius = (Entry<Integer, ArrayList<Neuron>>) it2.next();
-                int r=entryRadius.getKey();
-                System.out.print("neuron="+groupEntry.getKey().getId()+" \tradius="+r+" \tbubble={");
-                int cont=1;
-                for(Neuron n:entryRadius.getValue()){
-                    System.out.print(""+n.getId());
-                    if(cont!=entryRadius.getValue().size())
-                        System.out.print(",");
-                    cont++;
-                }
-                System.out.println("}");
-            }
-        }
-    }*/
- 
- 
- 
+
+  
     /**
      * Training process to a given sample 
      * @param inputSample input sample to train 
@@ -491,23 +379,8 @@ public class TTOSOM extends Classifier implements Serializable{
             long radius,double learningRate){
  
         Neuron bmu = findBMU(root, inputSample, root);
- 
- 
-        //ERROR!
-        //calculateNeighborhood(bubbleOfActivity, root, radius, null);
-        //The correct code is...
-        //bubbleOfActivity.add(bmu);
-        //calculateNeighborhood(bubbleOfActivity, bmu, radius, null);
- 
-        //but pre-computing the BoAs results in the following code
-        //bubbleOfActivity=map.get(bmu).get(radius);
- 
         ArrayList<Neuron> bubbleOfActivity = getPrecomputedBubble(radius, bmu);
- 
-//        if (bubbleOfActivity==null)
-//            System.out.println("Bubble error!");
- 
- 
+  
         //the update the respective neurons within the bubble of activity
         for(Neuron neuron : bubbleOfActivity){
             updateRule(neuron.getWeight(), learningRate, inputSample);

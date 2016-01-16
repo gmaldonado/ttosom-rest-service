@@ -13,4 +13,16 @@
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
+    
+    <context-param>
+       <param-name>contextConfigLocation</param-name>
+       <param-value>/WEB-INF/applicationContext.xml</param-value>
+   </context-param>
+ 
+    
+    <!-- Spring ContextLoaderListener -->
+   <listener>
+       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+   </listener>
+    
 </web-app>
