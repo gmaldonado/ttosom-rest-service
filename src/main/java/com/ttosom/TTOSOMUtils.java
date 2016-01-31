@@ -11,6 +11,7 @@ import com.ttosom.distance.NormalizedEuclideanDistance;
 import com.ttosom.distance.NormalizedManhattanDistance;
 import com.ttosom.neuron.NodeValue;
 
+import weka.classifiers.Evaluation;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 
@@ -43,5 +44,9 @@ public class TTOSOMUtils {
 		distancesMap.put("Manhattan", new NormalizedManhattanDistance());
 		return distancesMap;
 	}
+	
+	
+	
+	
 
 }

@@ -8,21 +8,21 @@ public class TTOSOMRequest implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private String dataSetUrl;
+	protected String dataSetUrl;
 	
-	private int[] treeAsArray;
+	protected int[] treeAsArray;
 	
-	private int iterations;
+	protected int iterations;
 	
-	private int initialRadius;
+	protected int initialRadius;
 	
-	private int finalRadius;
+	protected int finalRadius;
 	
-	private double initialLearningRate;
+	protected double initialLearningRate;
 	
-	private double finalLearningRate;
+	protected double finalLearningRate;
 	
-	private String distanceFunction;
+	protected String distanceFunction;
 
 	public String getDataSetUrl() {
 		return dataSetUrl;
