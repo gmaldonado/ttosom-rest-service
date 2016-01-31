@@ -1,9 +1,7 @@
 package com.ttosom.rest;
 
 import java.io.Serializable;
-import java.util.List;
 
-import com.ttosom.neuron.NodeValue;
 
 public class TTOSOMRequest implements Serializable{
 	
@@ -12,7 +10,7 @@ public class TTOSOMRequest implements Serializable{
 	
 	private String dataSetUrl;
 	
-	private List<NodeValue> treeAsArray;
+	private int[] treeAsArray;
 	
 	private int iterations;
 	
@@ -20,11 +18,11 @@ public class TTOSOMRequest implements Serializable{
 	
 	private int finalRadius;
 	
-	private int initialLearningRate;
+	private double initialLearningRate;
 	
-	private int finalLearningRate;
+	private double finalLearningRate;
 	
-	private String distance;
+	private String distanceFunction;
 
 	public String getDataSetUrl() {
 		return dataSetUrl;
@@ -34,11 +32,11 @@ public class TTOSOMRequest implements Serializable{
 		this.dataSetUrl = dataSetUrl;
 	}
 
-	public List<NodeValue> getTreeAsArray() {
+	public int[] getTreeAsArray() {
 		return treeAsArray;
 	}
 
-	public void setTreeAsArray(List<NodeValue> treeAsArray) {
+	public void setTreeAsArray(int[] treeAsArray) {
 		this.treeAsArray = treeAsArray;
 	}
 
@@ -66,33 +64,35 @@ public class TTOSOMRequest implements Serializable{
 		this.finalRadius = finalRadius;
 	}
 
-	public int getInitialLearningRate() {
+	public double getInitialLearningRate() {
 		return initialLearningRate;
 	}
 
-	public void setInitialLearningRate(int initialLearningRate) {
+	public void setInitialLearningRate(double initialLearningRate) {
 		this.initialLearningRate = initialLearningRate;
 	}
 
-	public int getFinalLearningRate() {
+	public double getFinalLearningRate() {
 		return finalLearningRate;
 	}
 
-	public void setFinalLearningRate(int finalLearningRate) {
+	public void setFinalLearningRate(double finalLearningRate) {
 		this.finalLearningRate = finalLearningRate;
 	}
 
-	public String getDistance() {
-		return distance;
+	public String getDistanceFunction() {
+		return distanceFunction;
 	}
 
-	public void setDistance(String distance) {
-		this.distance = distance;
+	public void setDistanceFunction(String distanceFunction) {
+		this.distanceFunction = distanceFunction;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	
 	
 	
 	
