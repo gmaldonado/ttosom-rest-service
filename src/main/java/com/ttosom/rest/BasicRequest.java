@@ -3,7 +3,7 @@ package com.ttosom.rest;
 import java.io.Serializable;
 
 
-public class TTOSOMRequest implements Serializable{
+public class BasicRequest implements Serializable{
 	
 	
 	private static final long serialVersionUID = 1L;

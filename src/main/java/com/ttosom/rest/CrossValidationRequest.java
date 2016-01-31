@@ -1,6 +1,6 @@
 package com.ttosom.rest;
 
-public class TTOSOMcrossValidationRequest extends TTOSOMRequest{
+public class CrossValidationRequest extends BasicRequest{
 	
 	
 	private static final long serialVersionUID = 1L;

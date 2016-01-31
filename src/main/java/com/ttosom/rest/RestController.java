@@ -1,9 +1,6 @@
 package com.ttosom.rest;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -33,7 +30,7 @@ public class RestController{
 	private TTOSOM ttosom;
 	private Instances dataSet;
  
-	private  void initializeTTOSOM(TTOSOMRequest jsonRequest) throws Exception{
+	private  void initializeTTOSOM(BasicRequest jsonRequest) throws Exception{
 		Map<String, Distance> distances = initializeDistancesMap();
 		
 		dataSet = readArffFromURL(jsonRequest.getDataSetUrl()); 
@@ -53,7 +50,7 @@ public class RestController{
 	}
 	
 	@RequestMapping(value = "/", method=RequestMethod.POST)
-	public ResponseEntity<List<Neuron>> callRegularFlow(@RequestBody TTOSOMRequest jsonRequest) throws Exception {
+	public ResponseEntity<List<Neuron>> callRegularFlow(@RequestBody BasicRequest jsonRequest) throws Exception {
 		initializeTTOSOM(jsonRequest);
 		List<Neuron> neurons = ttosom.getNeuronList();
 		return new ResponseEntity<>(neurons,HttpStatus.OK); 
@@ -62,7 +59,7 @@ public class RestController{
 	
 	//Here we need to see what is the real information that we want to get from cross validation
 	@RequestMapping(value = "/crossValidation", method=RequestMethod.POST)
-	public ResponseEntity<EvaluationWrapperResponse> crossValidation(@RequestBody TTOSOMcrossValidationRequest jsonRequest) throws Exception {
+	public ResponseEntity<EvaluationWrapperResponse> crossValidation(@RequestBody CrossValidationRequest jsonRequest) throws Exception {
 		
 		initializeTTOSOM(jsonRequest);
 
