@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.ttosom.TTOSOM;
 import com.ttosom.distance.Distance;
-import com.ttosom.neuron.Neuron;
 import com.ttosom.neuron.NodeValue;
 
 import weka.classifiers.Evaluation;
@@ -113,9 +112,16 @@ public class RestController{
 		
 	}
 	
-	/*@RequestMapping(value = "/clustering", method=RequestMethod.POST)
-	public ResponseEntity<List<Neuron>> clustering(@RequestBody BasicRequest jsonRequest) throws Exception {
-	}*/
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/clustering", method=RequestMethod.POST)
+	public ResponseEntity<JSONObject> clustering(@RequestBody BasicRequest jsonRequest) throws Exception {
+		initializeTTOSOM(jsonRequest);
+		int[] clusterVector = ttosom.generateClusterVector(dataSet, distanceFunction);
+		JSONObject clusterVectorAsJson = new JSONObject();
+		clusterVectorAsJson.put("cluster vector", clusterVector);
+		return new ResponseEntity<JSONObject>(clusterVectorAsJson,HttpStatus.OK); 
+	
+	}
 	
 	//Here we need to see what is the real information that we want to get from cross validation
 	@RequestMapping(value = "/crossValidation", method=RequestMethod.POST)
