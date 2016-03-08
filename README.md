@@ -62,7 +62,7 @@ Here we have 3 instances to be classified (without label).
 ### Clustering
 
 **Endpoint**
-POST /ttosomservice/ttosom/classification
+POST /ttosomservice/ttosom/clustering
 
 **Headers**
 Content-Type: application/json
