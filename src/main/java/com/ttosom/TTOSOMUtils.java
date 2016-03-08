@@ -37,6 +37,7 @@ public class TTOSOMUtils {
 		return dataSet;
 	}
 
+	//this should be improved by using spring configuration files
 	public static Map<String, Distance> initializeDistancesMap() {
 
 		Map<String, Distance> distancesMap = new HashMap<String, Distance>();
