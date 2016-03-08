@@ -1,5 +1,7 @@
 # TTOSOM REST service
-This is a RESTful implementation of TTOSOM using Maven and Spring MVC.
+This is a RESTful implementation of TTOSOM using Maven and Spring MVC. 
+
+[Here](http://www.sciencedirect.com/science/article/pii/S002002551100212X) you can find extra information about the algorithm.
 
 ## Requirements
 
@@ -49,7 +51,7 @@ Content-Type: application/json
 ```
 **Response**
 
-Here we have 3 instances to be classified (without label).
+In this dataset we had 3 instances to be classified and here is the classification. 
 
 ```json
 {
