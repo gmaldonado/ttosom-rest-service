@@ -89,7 +89,7 @@ The same one for classification.
 ```json
 {
 	"dataSetUrl": "http://www.helloworld.com/dataset.arff",
-	"treeAsArray": [3, 3, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0],
+	"treeAsArray": [3, 3, 3, 0, 0, 0],
 	"iterations": 1000,
 	"initialRadius": 8,
 	"finalRadius": 0,
