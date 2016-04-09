@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.ttosom.TTOSOM;
 import com.ttosom.distance.Distance;
+import com.ttosom.neuron.Neuron;
 import com.ttosom.neuron.NodeValue;
 
-import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -32,6 +32,7 @@ public class RestController {
 	private Instances dataSet;
 	private Distance distanceFunction;
 	private TTOSOM ttosom;
+	private final JSONObject weightsAsJson = new JSONObject();
 
 	@RequestMapping(value = "/classification", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> classification(@RequestBody BasicRequest jsonRequest) throws Exception {
@@ -72,25 +73,6 @@ public class RestController {
 
 	}
 
-	// Here we need to see what is the real information that we want to get from
-	// cross validation
-	@RequestMapping(value = "/crossValidation", method = RequestMethod.POST)
-	public ResponseEntity<EvaluationWrapperResponse> crossValidation(@RequestBody CrossValidationRequest jsonRequest)
-			throws Exception {
-
-		initializeTTOSOM(jsonRequest);
-
-		final int folds = jsonRequest.getFolds();
-		final int seedValue = jsonRequest.getSeedValue();
-
-		final Evaluation evaluation = new Evaluation(dataSet);
-		evaluation.crossValidateModel(ttosom, dataSet, folds, new Random(seedValue));
-
-		final EvaluationWrapperResponse responseAsJson = new EvaluationWrapperResponse(evaluation);
-
-		return new ResponseEntity<>(responseAsJson, HttpStatus.OK);
-	}
-
 	private void extractUnlabeledData(Instances unlabeledData) {
 		for (int i = 0; i < dataSet.numInstances(); i++) {
 			if (dataSet.instance(i).classIsMissing()) {
@@ -98,6 +80,29 @@ public class RestController {
 			}
 		}
 	}
+
+	// Here we need to see what is the real information that we want to get from
+	// cross validation
+	/*
+	 * @RequestMapping(value = "/crossValidation", method = RequestMethod.POST)
+	 * public ResponseEntity<EvaluationWrapperResponse>
+	 * crossValidation(@RequestBody CrossValidationRequest jsonRequest) throws
+	 * Exception {
+	 *
+	 * initializeTTOSOM(jsonRequest);
+	 *
+	 * final int folds = jsonRequest.getFolds(); final int seedValue =
+	 * jsonRequest.getSeedValue();
+	 *
+	 * final Evaluation evaluation = new Evaluation(dataSet);
+	 * evaluation.crossValidateModel(ttosom, dataSet, folds, new
+	 * Random(seedValue));
+	 *
+	 * final EvaluationWrapperResponse responseAsJson = new
+	 * EvaluationWrapperResponse(evaluation);
+	 *
+	 * return new ResponseEntity<>(responseAsJson, HttpStatus.OK); }
+	 */
 
 	@SuppressWarnings("unchecked")
 	private JSONObject generateInstancesAsJson(Instances instances) {
@@ -120,6 +125,23 @@ public class RestController {
 
 		return instancesAsJson;
 
+	}
+
+	private void generateWeightsAsJson(Neuron node) {
+		weightsAsJson.put(node.getId(), node.getWeightWithoutClass());
+		for (final Neuron child : node.getChildren()) {
+			generateWeightsAsJson(child);
+		}
+	}
+
+	@RequestMapping(value = "/vectors", method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> getWeightsVector(@RequestBody BasicRequest jsonRequest) throws Exception {
+
+		initializeTTOSOM(jsonRequest);
+
+		generateWeightsAsJson(ttosom.getRoot());
+
+		return new ResponseEntity<JSONObject>(weightsAsJson, HttpStatus.OK);
 	}
 
 	private void initializeTTOSOM(BasicRequest jsonRequest) throws Exception {
