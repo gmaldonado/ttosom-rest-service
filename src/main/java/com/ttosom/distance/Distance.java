@@ -21,11 +21,8 @@ package com.ttosom.distance;
 import weka.core.Instance;
 import weka.core.Instances;
 
-
-
-
 public interface Distance {
 
-    public double calculateDistance(Instance item1, Instance item2, Instances instances);
-    
+	public double calculateDistance(Instance item1, Instance item2, Instances instances);
+
 }

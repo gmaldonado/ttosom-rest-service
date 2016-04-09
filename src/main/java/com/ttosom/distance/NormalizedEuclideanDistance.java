@@ -19,19 +19,20 @@ package com.ttosom.distance;
  */
 
 import java.io.Serializable;
+
 import weka.core.EuclideanDistance;
 import weka.core.Instance;
 import weka.core.Instances;
 
-
-public class NormalizedEuclideanDistance implements Distance, Serializable{
+public class NormalizedEuclideanDistance implements Distance, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public double calculateDistance(Instance item1, Instance item2,Instances trainingSet) {
-        EuclideanDistance calculus = new EuclideanDistance(trainingSet);
-        calculus.setDontNormalize(false);   
-        return calculus.distance(item1, item2);    
-    }
-  
+	@Override
+	public double calculateDistance(Instance item1, Instance item2, Instances trainingSet) {
+		final EuclideanDistance calculus = new EuclideanDistance(trainingSet);
+		calculus.setDontNormalize(false);
+		return calculus.distance(item1, item2);
+	}
+
 }

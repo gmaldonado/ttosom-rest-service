@@ -5,8 +5,16 @@ This is a RESTful implementation of TTOSOM using Maven and Spring MVC.
 
 ## Requirements
 
-* Maven 3
-* Java 8
+* [Maven 3.](https://maven.apache.org/install.html)
+* Java 8.
+* Tomcat or any application server.
+
+
+## How to build and deploy
+
+Once you have installed Maven, build the application by doing **mvn clean install** and this will generate the **war file**. Once you have done this deploy it in the application server that you're using. 
+
+**Note:** If you cant to import this code in eclipse use **mvn eclipse:eclipse**.
 
 ## Parameters
 Here is the full description of all possible parameters to be used with the algorithm. The parameters will vary if this is we are doing classification or clustering. 
@@ -20,11 +28,13 @@ Here is the full description of all possible parameters to be used with the algo
 * **Final learning rate:** Final learning rate.
 * **Distance function:** Distance function to be used. At the moment this can be "Euclidean" or "Manhattan"
 
-**Currently in development**
+**CURRENTLY IN DEVELOPMENT (NOT FULLY IMPLEMENTED)**
 * **Folds:** Number of folds to be used in **k-cross validation**
 * **Seed value:** Seed value to be used in the random generator.
 
 ## Operation modes
+
+This algorithm is capable of doing classification, clustering and regression. At the moment we have only implemented classification and clustering, which are documented in the following sections.
 
 ## Request sample
 
@@ -37,10 +47,12 @@ POST /ttosomservice/ttosom/classification
 Content-Type: application/json
 
 **Request**
+
+This is only dummy data (by example, the tree is not consistent).
 ```json
 {
 	"dataSetUrl": "http://www.helloworld.com/dataset.arff",
-	"treeAsArray": [3, 3, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 3, 3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0],
+	"treeAsArray": [3, 3, 3, 0, 0, 0],
 	"iterations": 1000,
 	"initialRadius": 8,
 	"finalRadius": 0,
@@ -62,6 +74,7 @@ In this dataset we had 3 instances to be classified and here is the classificati
 ```
 
 ### Clustering
+This is only dummy data (by example, the tree is not consistent).
 
 **Endpoint**
 POST /ttosomservice/ttosom/clustering

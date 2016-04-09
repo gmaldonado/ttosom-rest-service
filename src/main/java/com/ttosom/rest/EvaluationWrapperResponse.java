@@ -4,40 +4,38 @@ import weka.classifiers.Evaluation;
 
 public class EvaluationWrapperResponse {
 
-	private String summary;
 	private String classDetails;
 	private String matrix;
-	
-	public EvaluationWrapperResponse(Evaluation evaluationFromWeka) throws Exception{
-		this.summary = evaluationFromWeka.toSummaryString();
-		this.classDetails = evaluationFromWeka.toClassDetailsString();
-		this.matrix = evaluationFromWeka.toMatrixString();
-	}
+	private String summary;
 
-	public String getSummary() {
-		return summary;
-	}
-
-	public void setSummary(String summary) {
-		this.summary = summary;
+	public EvaluationWrapperResponse(Evaluation evaluationFromWeka) throws Exception {
+		summary = evaluationFromWeka.toSummaryString();
+		classDetails = evaluationFromWeka.toClassDetailsString();
+		matrix = evaluationFromWeka.toMatrixString();
 	}
 
 	public String getClassDetails() {
 		return classDetails;
 	}
 
-	public void setClassDetails(String classDetails) {
-		this.classDetails = classDetails;
-	}
-
 	public String getMatrix() {
 		return matrix;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setClassDetails(String classDetails) {
+		this.classDetails = classDetails;
 	}
 
 	public void setMatrix(String matrix) {
 		this.matrix = matrix;
 	}
-	
-	
-	
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
 }

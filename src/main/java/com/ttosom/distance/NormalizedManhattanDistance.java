@@ -1,6 +1,5 @@
 package com.ttosom.distance;
 
-
 /**
  *   Tree-based Topology-Oriented SOM: Java implementation and R binding
  *   Copyright (C) 2013  Gonzalo Maldonado, Cesar A. Astudillo
@@ -20,22 +19,20 @@ package com.ttosom.distance;
  */
 
 import java.io.Serializable;
+
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.ManhattanDistance;
 
+public class NormalizedManhattanDistance implements Distance, Serializable {
 
-
-public class NormalizedManhattanDistance implements Distance, Serializable{
-    
-    
 	private static final long serialVersionUID = 1L;
 
 	@Override
-    public double calculateDistance(Instance item1, Instance item2,Instances trainingSet) {
-        ManhattanDistance calculus = new ManhattanDistance(trainingSet);
-        calculus.setDontNormalize(false);        
-        return calculus.distance(item1, item2);    
-    }
-    
+	public double calculateDistance(Instance item1, Instance item2, Instances trainingSet) {
+		final ManhattanDistance calculus = new ManhattanDistance(trainingSet);
+		calculus.setDontNormalize(false);
+		return calculus.distance(item1, item2);
+	}
+
 }
